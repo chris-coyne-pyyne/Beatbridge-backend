@@ -141,10 +141,16 @@ app.get("/", (req, res) => {
 });
 
 // sign up - just insert user into the list of users
-app.post("/users", async (req, res) => {
+app.post("/signup", async (req, res) => {
   try {
-    users.append(req.body);
-    res.status(200).json(req.body);
+    const userId = uuidv4();
+    const newUser = { ...req.body, id: userId };
+    users.push(newUser);
+    console.log(
+      "new users ",
+      users.find((u) => u.id === userId)
+    );
+    res.status(200).json(newUser);
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(400).json({ error: error.message });
@@ -203,7 +209,7 @@ app.post("/event", async (req, res) => {
     const requester = users.find((user) => user.id === req.body.userId);
     newEvent.organizer = requester;
 
-    // fill in mock pic (much easier)
+    // fill in mock pic (much easier) - this one is just the Vans Warped Tour logo :P
     newEvent.pic =
       "https://static.wixstatic.com/media/650945_43f7cca64d7e4e4594d704b93986679f~mv2.png/v1/fill/w_400,h_324,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/VWT25_WEB%20RES_color.png";
 
