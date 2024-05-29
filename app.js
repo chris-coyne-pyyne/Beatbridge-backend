@@ -146,10 +146,6 @@ app.post("/signup", async (req, res) => {
     const userId = uuidv4();
     const newUser = { ...req.body, id: userId };
     users.push(newUser);
-    console.log(
-      "new users ",
-      users.find((u) => u.id === userId)
-    );
     res.status(200).json(newUser);
   } catch (error) {
     console.error("Error creating user:", error);
@@ -162,6 +158,9 @@ app.post("/login", async (req, res) => {
     const selectedUser = users.find(
       (user) => user.email === req.body.email.toLowerCase()
     );
+    if (!selectedUser) {
+      res.status(400).json({ error: "Invalid Credentials" });
+    }
     res.status(201).json({
       ...selectedUser,
       token: "test token...",
@@ -177,7 +176,6 @@ app.get("/events/:id", async (req, res) => {
   try {
     const eventId = req.params.id;
     const event = events.find((event) => event.id === eventId);
-    console.log("req body ", req.body);
     res.status(201).json({
       ...event,
     });
@@ -190,7 +188,6 @@ app.get("/events/:id", async (req, res) => {
 // get all events from the backend
 app.get("/events", async (req, res) => {
   try {
-    console.log("returning events...");
     res.status(201).json(events);
   } catch (error) {
     console.error("Error creating user:", error);
@@ -201,7 +198,6 @@ app.get("/events", async (req, res) => {
 // create new event from the backend
 app.post("/event", async (req, res) => {
   try {
-    console.log("req body ", req.body);
     // create the event
     const newEvent = { ...req.body };
 
@@ -216,7 +212,6 @@ app.post("/event", async (req, res) => {
     newEvent.id = uuidv4();
 
     events.push(newEvent);
-    console.log("NEW EVENTS ", events);
 
     res.status(201).json({ ...newEvent });
   } catch (error) {
