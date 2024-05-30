@@ -146,7 +146,7 @@ app.post("/signup", async (req, res) => {
     const userId = uuidv4();
     const newUser = { ...req.body, id: userId };
     users.push(newUser);
-    res.status(200).json(newUser);
+    res.status(200).json({ ...newUser, token: "test token..." });
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(400).json({ error: error.message });
